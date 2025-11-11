@@ -21,9 +21,9 @@ class AdaptiveQueue<T> (
     rules: List<PriorityRule<T>> = emptyList(),
 ) {
     val storage: PriorityQueue<PrioritizedEntry<QueueEntry<T>>> = PriorityQueue<PrioritizedEntry<QueueEntry<T>>>(compareByDescending { it.priority })
-    val ruleManager: RuleManager<T> = RuleManager(rules)
+    val ruleManager: RuleManager<T> = RuleManager(ArrayList(rules))
     val priorityEngine: PriorityEngine<T> = PriorityEngine(ruleManager)
-    val updateManager: UpdateManager<T> = UpdateManager(priorityEngine, storage)
+    val updateManager: UpdateManager<T> = UpdateManager(priorityEngine, ruleManager, storage)
 
 
     init {
