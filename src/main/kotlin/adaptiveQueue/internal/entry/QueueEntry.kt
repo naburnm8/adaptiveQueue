@@ -25,6 +25,10 @@ class QueueEntry<T> (
         return out
     }
 
+    fun hasParam(qualifier: String): Boolean {
+        return params.find {it.name == qualifier} != null
+    }
+
     fun deactivateAll() {
         activeParams.clear()
     }

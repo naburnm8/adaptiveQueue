@@ -21,6 +21,7 @@ sealed class EventOut<T> {
     class RuleSuccess<T> (val rule: PriorityRule<T>, val operationType: RuleOperationType) : EventOut<T>()
     class PeekResponseOne<T> (val entry: PlacedQueueEntry<T>) : EventOut<T>()
     class PeekResponseAll<T> (val entries: List<PlacedQueueEntry<T>>) : EventOut<T>()
+    class Reevaluated<T> : EventOut<T>()
     class ParamsUpdated<T> : EventOut<T>()
     class OperationNotCompleted<T> (val exception: Exception) : EventOut<T>()
 }

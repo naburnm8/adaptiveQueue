@@ -8,7 +8,7 @@ import ru.bmstu.naburnm8.adaptiveQueue.internal.rule.PriorityRule
 import ru.bmstu.naburnm8.adaptiveQueue.internal.PriorityEngine
 import ru.bmstu.naburnm8.adaptiveQueue.internal.rule.RuleManager
 import ru.bmstu.naburnm8.adaptiveQueue.internal.UpdateManager
-import ru.bmstu.naburnm8.adaptiveQueue.internal.exception.ModelNotFound
+import ru.bmstu.naburnm8.adaptiveQueue.internal.exception.ModelNotFoundException
 import java.util.PriorityQueue
 
 data class PrioritizedEntry<T> (
@@ -46,7 +46,7 @@ class AdaptiveQueue<T> (
                 is EventIn.PeekOne -> {
                     val element = if (event.model == null) storage.peek() else storage.find { it.entry.model == event.model }
                     if (element == null) {
-                        return EventOut.OperationNotCompleted(exception = ModelNotFound(event.model.toString()))
+                        return EventOut.OperationNotCompleted(exception = ModelNotFoundException(event.model.toString()))
                     }
                     val place = storage.sortedByDescending { it.priority }.indexOf(element)
                     return EventOut.PeekResponseOne(PlacedQueueEntry(element, place))
