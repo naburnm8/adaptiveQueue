@@ -1,21 +1,26 @@
 package ru.bmstu.naburnm8.adaptiveQueue.internal.rule
 
-import ru.bmstu.naburnm8.adaptiveQueue.inner.entry.QueueEntry
-import ru.bmstu.naburnm8.adaptiveQueue.inner.manager.PriorityRule
+import ru.bmstu.naburnm8.adaptiveQueue.internal.entry.QueueEntry
 
-const val RULE_DOES_NOT_APPLY: Double = -1.0
 
 class RuleManager<T> (
     private val rules: List<PriorityRule<T>>
 ) {
-    fun calculateIfApplicable(entry: QueueEntry<T>): Double {
+    fun calculateRules(entry: QueueEntry<T>): List<Double> {
+        val output = mutableListOf<Double>()
         for (rule in rules) {
             if (rule.condition(entry.model)) {
-                return rule.calculate(entry.model)
-            } else {
-                return RULE_DOES_NOT_APPLY
+                var calculated = rule.calculate(entry.model)
+
+                if (calculated > 1.0) {
+                    calculated = 1.0
+                } else if (calculated < 0.0) {
+                    calculated = 0.0
+                }
+
+                output.add(calculated)
             }
         }
-        return RULE_DOES_NOT_APPLY
+        return output
     }
 }

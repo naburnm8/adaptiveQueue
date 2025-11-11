@@ -1,4 +1,4 @@
-package ru.bmstu.naburnm8.adaptiveQueue.inner.entry
+package ru.bmstu.naburnm8.adaptiveQueue.internal.entry
 
 data class QueueParam <T>(
     val name: String,

@@ -1,4 +1,4 @@
-package ru.bmstu.naburnm8.adaptiveQueue.inner.entry
+package ru.bmstu.naburnm8.adaptiveQueue.internal.entry
 
 class QueueEntry<T> (
     val model: T,
@@ -9,10 +9,16 @@ class QueueEntry<T> (
     fun calculateActiveParams(): List<CalculatedQueueParam> {
         val out = ArrayList<CalculatedQueueParam>()
         for (param in activeParams) {
+            var computed = param.compute(model) * param.weight
+            if (computed > 1.0) {
+                computed = 1.0
+            } else if (computed < 0.0) {
+                computed = 0.0
+            }
             out.add(
                 CalculatedQueueParam(
                     name = param.name,
-                    value = param.compute(model)
+                    value = computed,
                 )
             )
         }
