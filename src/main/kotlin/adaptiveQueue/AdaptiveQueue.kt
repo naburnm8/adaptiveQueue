@@ -56,4 +56,20 @@ class AdaptiveQueue<T> (
             return EventOut.OperationNotCompleted(exception = e)
         }
     }
+
+    fun enqueue(entry: QueueEntry<T>): EventOut<T> {
+        return this.handleEvent(EventIn.CanTriggerReevaluation.Enqueue(entry))
+    }
+
+    fun dequeue(): EventOut<T> {
+        return this.handleEvent(EventIn.CanTriggerReevaluation.Dequeue())
+    }
+
+    fun dequeueByModel(model: T): EventOut<T> {
+        return this.handleEvent(EventIn.CanTriggerReevaluation.DequeueByModel(model))
+    }
+
+    fun reevaluate(): EventOut<T> {
+        return this.handleEvent(EventIn.CanTriggerReevaluation.Reevaluate())
+    }
 }
