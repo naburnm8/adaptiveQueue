@@ -104,6 +104,11 @@ class EssentialsTest {
 
         var peek = queue.handleEvent(EventIn.PeekAll()) as EventOut.PeekResponseAll<RequestFromStudent>
 
+        println("MISHA ENQUEUED")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
+        }
+
         assertEquals(mishaPriority, peek.entries[0].entry.priority)
         assertEquals(0, peek.entries[0].place)
 
@@ -121,12 +126,11 @@ class EssentialsTest {
 
         assertEquals(1, peek.entries[1].place) // Misha moved to second place
 
-
-        /*
-        for (entry in peek.entries) {
-            println("Position ${entry.place}, priority ${entry.entry.priority}, model ${entry.entry.entry.model}")
+        println("KATYA ENQUEUED")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
         }
-         */
+
     }
 
     @Test
@@ -134,9 +138,21 @@ class EssentialsTest {
         val entries = createEntries()
         val queue = AdaptiveQueue(entries)
 
+        var peek = queue.handleEvent(EventIn.PeekAll()) as EventOut.PeekResponseAll<RequestFromStudent>
+
+        println("QUEUE BEFORE DEQUEUE")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
+        }
+
         queue.dequeue()
 
-        var peek = queue.handleEvent(EventIn.PeekAll()) as EventOut.PeekResponseAll<RequestFromStudent>
+        peek = queue.handleEvent(EventIn.PeekAll()) as EventOut.PeekResponseAll<RequestFromStudent>
+
+        println("QUEUE AFTER DEQUEUE")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
+        }
 
         assertEquals("Katya", peek.entries[0].entry.entry.model.student.name) // Katya first after deque
         assertEquals("Misha", peek.entries[1].entry.entry.model.student.name) // Misha second
@@ -144,6 +160,11 @@ class EssentialsTest {
         queue.dequeueByModel(entries[0].model)
 
         peek = queue.handleEvent(EventIn.PeekAll()) as EventOut.PeekResponseAll<RequestFromStudent>
+
+        println("QUEUE AFTER DEQUEUE BY MODEL")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
+        }
 
         assertEquals("Katya", peek.entries[0].entry.entry.model.student.name) // Katya first after second dequeue
 
@@ -165,9 +186,9 @@ class EssentialsTest {
         assertEquals(katyaPriority, peek.entries[1].entry.priority)
         assertEquals(mishaPriority, peek.entries[2].entry.priority)
 
-        println("Before rule: ")
-        for (entry in peek.entries) {
-            println("Position ${entry.place}, priority ${entry.entry.priority}, model ${entry.entry.entry.model}")
+        println("BEFORE RULE")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
         }
 
         queue.handleEvent(EventIn.CanTriggerReevaluation.AddRule(createRules()[0], true))
@@ -182,9 +203,9 @@ class EssentialsTest {
         assertEquals(newKatyaPriority, peek.entries[0].entry.priority)
         assertEquals(newMishaPriority, peek.entries[1].entry.priority)
 
-        println("After rule: ")
-        for (entry in peek.entries) {
-            println("Position ${entry.place}, priority ${entry.entry.priority}, model ${entry.entry.entry.model}")
+        println("AFTER RULE")
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
         }
     }
 }
