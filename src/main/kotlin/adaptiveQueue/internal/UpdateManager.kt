@@ -18,7 +18,8 @@ import java.util.PriorityQueue
 class UpdateManager<T> (
     private val priorityEngine: PriorityEngine<T>,
     private val ruleManager: RuleManager<T>,
-    private val storage: PriorityQueue<PrioritizedEntry<QueueEntry<T>>>
+    private val storage: PriorityQueue<PrioritizedEntry<QueueEntry<T>>>,
+    private val seqCounter: java.util.concurrent.atomic.AtomicLong
 ) {
     fun handleEvent(event: EventIn.CanTriggerReevaluation<T>): EventOut<T> {
         val eventOut: EventOut<T>
@@ -26,7 +27,8 @@ class UpdateManager<T> (
             when (event) {
                 is EventIn.CanTriggerReevaluation.Enqueue -> {
                     val priority = priorityEngine.calculate(event.entry)
-                    storage.add(PrioritizedEntry(event.entry, priority))
+                    val seq = seqCounter.getAndIncrement()
+                    storage.add(PrioritizedEntry(event.entry, priority, seq))
                     eventOut = EventOut.Enqueued(event.entry.model)
                 }
 

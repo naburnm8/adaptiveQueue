@@ -37,7 +37,7 @@ class PerformanceTest {
     fun `memory complexity`() {
         data class Tester(val i: Int)
 
-        val sizes = listOf(0, 1_000, 10_000, 100_000, 1_000_000)
+        val sizes = listOf(500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000)
         for (n in sizes) {
             val entries = (1..n).map {
                 QueueEntry(Tester(it), listOf(QueueParam("value", 1.0) { x -> x.i.toDouble() / n }))

@@ -13,23 +13,26 @@ import java.util.PriorityQueue
 
 data class PrioritizedEntry<T> (
     val entry: T,
-    val priority: Double
+    val priority: Double,
+    val seq: Long,
 )
 
 class AdaptiveQueue<T> (
     entries: List<QueueEntry<T>> = emptyList(),
     rules: List<PriorityRule<T>> = emptyList(),
 ) {
-    val storage: PriorityQueue<PrioritizedEntry<QueueEntry<T>>> = PriorityQueue<PrioritizedEntry<QueueEntry<T>>>(compareByDescending { it.priority })
+    val storage: PriorityQueue<PrioritizedEntry<QueueEntry<T>>> = PriorityQueue<PrioritizedEntry<QueueEntry<T>>>(compareByDescending<PrioritizedEntry<QueueEntry<T>>> { it.priority }.thenByDescending { it.seq })
     val ruleManager: RuleManager<T> = RuleManager(ArrayList(rules))
     val priorityEngine: PriorityEngine<T> = PriorityEngine(ruleManager)
-    val updateManager: UpdateManager<T> = UpdateManager(priorityEngine, ruleManager, storage)
+    private val seqCounter = java.util.concurrent.atomic.AtomicLong(0)
+    val updateManager: UpdateManager<T> = UpdateManager(priorityEngine, ruleManager, storage, seqCounter)
+
 
 
     init {
         for (entry in entries) {
             val priority = priorityEngine.calculate(entry)
-            storage.add(PrioritizedEntry(entry, priority))
+            storage.add(PrioritizedEntry(entry, priority, seqCounter.getAndIncrement()))
         }
     }
 

@@ -44,6 +44,30 @@ class EssentialsTest {
         return out
     }
 
+    private fun createRequestsStability(): List<RequestFromStudent> {
+        val out = listOf<RequestFromStudent>(
+            RequestFromStudent(
+                id = 1,
+                student = Student(1, "Misha"),
+                requestedTimeMinutes = 15,
+                amountOfDebts = 4,
+            ),
+            RequestFromStudent(
+                id = 2,
+                student = Student(2, "Katya"),
+                requestedTimeMinutes = 15,
+                amountOfDebts = 4,
+            ),
+            RequestFromStudent(
+                id = 3,
+                student = Student(3, "Bob"),
+                requestedTimeMinutes = 15,
+                amountOfDebts = 0,
+            )
+        )
+        return out
+    }
+
     private fun createParams(): List<QueueParam<RequestFromStudent>> {
         val out = listOf<QueueParam<RequestFromStudent>>(
             QueueParam(
@@ -70,6 +94,17 @@ class EssentialsTest {
 
     private fun createEntries(): List<QueueEntry<RequestFromStudent>> {
         val requests = createRequests()
+        val entries = ArrayList<QueueEntry<RequestFromStudent>>()
+
+        for (request in requests) {
+            entries.add(QueueEntry(request, createParams()))
+        }
+
+        return entries
+    }
+
+    private fun createEntriesStability(): List<QueueEntry<RequestFromStudent>> {
+        val requests = createRequestsStability()
         val entries = ArrayList<QueueEntry<RequestFromStudent>>()
 
         for (request in requests) {
@@ -207,5 +242,17 @@ class EssentialsTest {
         for (prEntry in peek.entries) {
             println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
         }
+    }
+
+    @Test
+    fun `check stability`() {
+        val entries = createEntriesStability()
+        val queue = AdaptiveQueue(entries)
+
+        val peek = queue.handleEvent(EventIn.PeekAll()) as EventOut.PeekResponseAll<RequestFromStudent>
+
+        assertEquals("Bob", peek.entries[0].entry.entry.model.student.name)
+        assertEquals("Misha", peek.entries[1].entry.entry.model.student.name)
+        assertEquals("Katya", peek.entries[2].entry.entry.model.student.name)
     }
 }
