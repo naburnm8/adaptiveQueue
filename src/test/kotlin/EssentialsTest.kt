@@ -254,5 +254,9 @@ class EssentialsTest {
         assertEquals("Bob", peek.entries[0].entry.entry.model.student.name)
         assertEquals("Misha", peek.entries[1].entry.entry.model.student.name)
         assertEquals("Katya", peek.entries[2].entry.entry.model.student.name)
+
+        for (prEntry in peek.entries) {
+            println("Name: ${prEntry.entry.entry.model.student.name}, position: ${prEntry.place}, priority: ${prEntry.entry.priority}")
+        }
     }
 }

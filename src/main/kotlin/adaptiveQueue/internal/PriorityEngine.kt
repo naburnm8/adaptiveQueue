@@ -20,7 +20,9 @@ class PriorityEngine<T> (
             accumulator += calculatedRule
         }
 
-        accumulator /= calculated.size + calculatedRules.size
+        if (!(calculatedRules.isEmpty() && calculated.isEmpty())) {
+            accumulator /= calculated.size + calculatedRules.size
+        }
 
         return accumulator
     }
