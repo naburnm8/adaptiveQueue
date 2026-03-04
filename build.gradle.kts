@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "ru.bmstu.naburnm8"
-version = "1.0-SNAPSHOT"
+version = "1.0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -26,7 +26,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "ru.bmstu.naburnm8"
             artifactId = "adaptiveQueue"
-            version = "1.0-SNAPSHOT"
+            version = "1.0.2-SNAPSHOT"
 
             from(components["kotlin"])
         }

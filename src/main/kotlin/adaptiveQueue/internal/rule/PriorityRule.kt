@@ -6,7 +6,8 @@ import java.util.UUID
 open class PriorityRule<T> (
     val identifier: UUID = UUID.randomUUID(),
     protected val condition: (T) -> Boolean,
-    protected val calculate: (T) -> Double
+    protected val calculate: (T) -> Double,
+    val isPersistent: Boolean = true,
 ) {
     fun condition(model: T): Boolean {
         return condition.invoke(model)

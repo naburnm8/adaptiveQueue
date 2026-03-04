@@ -46,6 +46,10 @@ class RuleManager<T> (
                 }
 
                 output.add(calculated)
+            } else {
+                if (rule.isPersistent) {
+                    output.add(0.0)
+                }
             }
         }
         return output
